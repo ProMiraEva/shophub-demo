@@ -1,0 +1,780 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ArtificialHub — Artist Gallery Template</title>
+<style>
+:root {
+  --bg: #f6f5f1;
+  --surface: #ffffff;
+  --text: #1c2437;
+  --muted: #5c6478;
+  --accent: #a67c2e;
+  --accent-strong: #8a6520;
+  --accent-soft: rgba(166, 124, 46, 0.09);
+  --border: #e3e0d8;
+  --border-strong: #cfcabd;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0e1320;
+    --surface: #161c2b;
+    --text: #ece7dc;
+    --muted: #9aa3b5;
+    --accent: #d4a94e;
+    --accent-strong: #e6c170;
+    --accent-soft: rgba(212, 169, 78, 0.12);
+    --border: #232b3d;
+    --border-strong: #38445e;
+  }
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 68rem; margin: 0 auto; padding: 0 1.5rem; }
+.serif { font-family: Georgia, "Iowan Old Style", "Palatino Linotype", "Book Antiqua", serif; }
+
+/* ── Top bar ── */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.brand { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; color: inherit; }
+.brand .mark {
+  width: 2.4rem; height: 2.4rem; border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 50%, var(--text) 140%);
+  display: grid; place-items: center;
+  font-family: Georgia, serif; font-style: italic; font-weight: 700;
+  color: #fff; font-size: 1.1rem;
+  box-shadow: 0 2px 12px var(--accent-soft);
+}
+.brand strong { font-size: 1.1rem; letter-spacing: 0.01em; }
+.topbar nav { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+.topbar nav a {
+  color: var(--muted); text-decoration: none; font-size: 0.9rem;
+  padding: 0.4rem 0.9rem; border: 1px solid var(--border-strong); border-radius: 999px;
+  transition: color .15s, border-color .15s;
+}
+.topbar nav a:hover { color: var(--accent); border-color: var(--accent); }
+
+/* ── Cart button ── */
+.cart-btn {
+  position: relative; display: inline-flex; align-items: center; gap: 0.45rem;
+  padding: 0.45rem 1rem; font-size: 0.9rem; font-weight: 600; font-family: inherit;
+  border: 1px solid var(--accent); border-radius: 999px; cursor: pointer;
+  background: var(--accent-soft); color: var(--accent);
+  transition: filter .15s;
+}
+.cart-btn:hover { filter: brightness(1.05); }
+.cart-btn .count {
+  min-width: 1.3rem; height: 1.3rem; padding: 0 0.3rem;
+  display: inline-grid; place-items: center;
+  background: var(--accent); color: #fff; border-radius: 999px;
+  font-size: 0.75rem; font-weight: 700;
+}
+
+/* ── Hero ── */
+.hero {
+  padding: 5rem 0 3.5rem; text-align: center;
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background:
+    radial-gradient(ellipse 60% 45% at 50% 0%, var(--accent-soft) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 35% at 15% 90%, var(--accent-soft) 0%, transparent 65%),
+    radial-gradient(ellipse 40% 35% at 85% 85%, var(--accent-soft) 0%, transparent 65%);
+}
+.kicker {
+  display: inline-block; font-size: 0.78rem; font-weight: 600;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--accent); background: var(--accent-soft);
+  padding: 0.35rem 0.85rem; border-radius: 999px; margin-bottom: 1.5rem;
+}
+.hero h1 {
+  font-family: Georgia, "Iowan Old Style", "Palatino Linotype", "Book Antiqua", serif;
+  font-size: clamp(2.6rem, 7vw, 4.4rem);
+  line-height: 1.05; margin: 0 0 1.25rem; font-weight: 400;
+  letter-spacing: -0.02em;
+  background: linear-gradient(160deg, var(--text) 30%, var(--accent) 75%, var(--accent-strong) 100%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+}
+.hero p.lead { font-size: 1.15rem; color: var(--muted); max-width: 48ch; margin: 0 auto 2rem; }
+.hero .actions { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+.btn {
+  display: inline-block; padding: 0.9rem 1.8rem; font-size: 1rem; font-weight: 600;
+  border-radius: 999px; text-decoration: none; cursor: pointer; border: none; font-family: inherit;
+  transition: filter .15s, transform .15s;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 100%);
+  color: #fff;
+  box-shadow: 0 4px 18px var(--accent-soft);
+}
+.btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
+.btn-ghost { border: 1px solid var(--border-strong); color: var(--text); background: transparent; }
+.btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ── Category sections ── */
+.section { padding: 3rem 0 1rem; }
+.section-head { display: flex; align-items: baseline; gap: 1rem; margin-bottom: 1.75rem; }
+.section-head h2 {
+  font-family: Georgia, serif; font-size: 1.5rem; font-weight: 400; margin: 0; white-space: nowrap;
+}
+.section-head .rule { flex: 1; border-top: 1px solid var(--border); }
+
+/* ── Product cards ── */
+.products {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem;
+}
+.card {
+  border: 1px solid var(--border); border-radius: 14px;
+  overflow: hidden; background: var(--surface);
+  display: flex; flex-direction: column;
+  transition: transform .2s, box-shadow .2s;
+  position: relative;
+}
+.card:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+.card .img-wrap { position: relative; }
+.card img { display: block; width: 100%; aspect-ratio: 3/4; object-fit: cover; }
+.card .img-wrap::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.25) 100%);
+  opacity: 0; transition: opacity .2s;
+}
+.card:hover .img-wrap::after { opacity: 1; }
+.card .body {
+  padding: 1rem; display: flex; flex-direction: column; gap: 0.5rem; flex: 1;
+}
+.card h3 { font-family: Georgia, serif; font-weight: 400; font-size: 1.05rem; margin: 0; }
+.card p { margin: 0; font-size: 0.88rem; color: var(--muted); flex: 1; }
+.card .price {
+  font-family: Georgia, serif; font-size: 1.15rem; color: var(--accent); font-weight: 700;
+}
+.card .actions-row { display: flex; gap: 0.5rem; margin-top: auto; flex-wrap: wrap; }
+.card .buy, .card .add {
+  flex: 1; min-width: 6rem; text-align: center;
+  padding: 0.5rem 0.8rem; font-size: 0.85rem; font-weight: 600;
+  border-radius: 999px; text-decoration: none; cursor: pointer;
+  font-family: inherit; border: none;
+  transition: filter .15s;
+}
+.card .buy {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 100%);
+  color: #fff;
+}
+.card .buy:hover { filter: brightness(1.1); }
+.card .add {
+  border: 1px solid var(--accent); color: var(--accent); background: transparent;
+}
+.card .add:hover { background: var(--accent-soft); }
+.card .add.added { background: var(--accent-soft); }
+
+/* ── Info band ── */
+.info-band {
+  margin: 3.5rem 0 2rem; padding: 2.5rem 2rem;
+  border: 1px solid var(--border-strong); border-radius: 20px;
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 0%, var(--accent-soft) 0%, transparent 70%),
+    var(--surface);
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; text-align: center;
+}
+.info-band .item .num {
+  font-family: Georgia, serif; font-style: italic; color: var(--accent);
+  display: block; margin-bottom: 0.5rem; font-size: 0.95rem;
+}
+.info-band h3 { font-family: Georgia, serif; font-weight: 400; font-size: 1.05rem; margin: 0 0 0.35rem; }
+.info-band p { margin: 0; font-size: 0.9rem; color: var(--muted); }
+
+/* ── Footer ── */
+footer {
+  border-top: 1px solid var(--border); padding: 2rem 0 3rem;
+  display: flex; justify-content: space-between; align-items: center;
+  color: var(--muted); font-size: 0.88rem; flex-wrap: wrap; gap: 1rem;
+}
+footer a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--border-strong); }
+footer a:hover { color: var(--accent); }
+
+/* ── Cart drawer ── */
+.overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+  opacity: 0; pointer-events: none; transition: opacity .25s; z-index: 40;
+}
+.overlay.open { opacity: 1; pointer-events: auto; }
+.drawer {
+  position: fixed; top: 0; right: 0; height: 100%; width: min(24rem, 92vw);
+  background: var(--bg); border-left: 1px solid var(--border-strong);
+  transform: translateX(100%); transition: transform .25s ease; z-index: 50;
+  display: flex; flex-direction: column;
+}
+.drawer.open { transform: translateX(0); }
+.drawer-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border);
+}
+.drawer-head h2 { font-family: Georgia, serif; font-weight: 400; font-size: 1.2rem; margin: 0; }
+.drawer-close {
+  border: none; background: none; font-size: 1.4rem; cursor: pointer;
+  color: var(--muted); line-height: 1; padding: 0.25rem;
+}
+.drawer-close:hover { color: var(--text); }
+.drawer-body { flex: 1; overflow-y: auto; padding: 1rem 1.5rem; }
+.cart-empty { text-align: center; color: var(--muted); padding: 3rem 0; font-size: 0.95rem; }
+.cart-item {
+  display: grid; grid-template-columns: 4rem 1fr auto; gap: 0.85rem;
+  padding: 0.85rem 0; border-bottom: 1px solid var(--border); align-items: center;
+}
+.cart-item img { width: 4rem; aspect-ratio: 3/4; object-fit: cover; border-radius: 8px; }
+.cart-item .name { font-family: Georgia, serif; font-size: 0.95rem; }
+.cart-item .unit { font-size: 0.8rem; color: var(--muted); }
+.cart-item .qty {
+  display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.35rem;
+}
+.qty button {
+  width: 1.5rem; height: 1.5rem; border-radius: 50%;
+  border: 1px solid var(--border-strong); background: var(--surface);
+  color: var(--text); cursor: pointer; font-size: 0.9rem; line-height: 1;
+  display: grid; place-items: center;
+}
+.qty button:hover { border-color: var(--accent); color: var(--accent); }
+.qty span { min-width: 1.2rem; text-align: center; font-size: 0.9rem; }
+.cart-item .right { text-align: right; }
+.cart-item .line-total { font-family: Georgia, serif; color: var(--accent); font-weight: 700; }
+.cart-item .remove {
+  display: block; margin-top: 0.3rem; font-size: 0.75rem; color: var(--muted);
+  background: none; border: none; cursor: pointer; text-decoration: underline;
+}
+.cart-item .remove:hover { color: #c0392b; }
+.drawer-foot { padding: 1.25rem 1.5rem; border-top: 1px solid var(--border); }
+.cart-total {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-family: Georgia, serif; margin-bottom: 1rem;
+}
+.cart-total .amount { font-size: 1.4rem; color: var(--accent); font-weight: 700; }
+.checkout-btn {
+  width: 100%; padding: 0.9rem; font-size: 1rem; font-weight: 600; font-family: inherit;
+  border: none; border-radius: 999px; cursor: pointer;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 100%);
+  color: #fff;
+  transition: filter .15s;
+}
+.checkout-btn:hover { filter: brightness(1.1); }
+.checkout-btn:disabled { opacity: 0.45; cursor: not-allowed; filter: none; }
+
+/* ── Checkout form ── */
+.checkout-form { display: grid; gap: 0.85rem; }
+.checkout-form label { font-size: 0.85rem; font-weight: 600; display: block; margin-bottom: 0.25rem; }
+.checkout-form label .req { color: #c0392b; }
+.checkout-form input, .checkout-form textarea {
+  width: 100%; padding: 0.7rem 0.9rem; font-size: 0.95rem; font-family: inherit;
+  border: 1px solid var(--border-strong); border-radius: 10px;
+  background: var(--surface); color: var(--text);
+}
+.checkout-form input:focus, .checkout-form textarea:focus {
+  outline: 2px solid var(--accent); outline-offset: 1px;
+}
+.checkout-form textarea { resize: vertical; min-height: 4.5rem; }
+.checkout-form .error { color: #c0392b; font-size: 0.78rem; margin-top: 0.2rem; display: none; }
+.checkout-form .field.invalid input, .checkout-form .field.invalid textarea { border-color: #c0392b; }
+.checkout-form .field.invalid .error { display: block; }
+.order-summary {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 1rem; margin-bottom: 1rem; font-size: 0.9rem;
+}
+.order-summary h3 { font-family: Georgia, serif; font-weight: 400; margin: 0 0 0.6rem; font-size: 1rem; }
+.order-summary .line { display: flex; justify-content: space-between; gap: 1rem; padding: 0.2rem 0; }
+.order-summary .line.total {
+  border-top: 1px solid var(--border); margin-top: 0.5rem; padding-top: 0.5rem;
+  font-family: Georgia, serif; font-weight: 700; color: var(--accent);
+}
+.order-done { text-align: center; padding: 1.5rem 0; }
+.order-done .ok {
+  width: 3rem; height: 3rem; margin: 0 auto 1rem; border-radius: 50%;
+  background: var(--accent-soft); color: var(--accent);
+  display: grid; place-items: center; font-size: 1.5rem; font-weight: 700;
+}
+.order-done h3 { font-family: Georgia, serif; font-weight: 400; margin: 0 0 0.5rem; }
+.order-done p { color: var(--muted); font-size: 0.92rem; margin: 0 0 1.25rem; }
+.order-done .row { display: grid; gap: 0.6rem; }
+.toast {
+  position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(1rem);
+  background: var(--text); color: var(--bg); padding: 0.7rem 1.4rem;
+  border-radius: 999px; font-size: 0.9rem; font-weight: 600;
+  opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s; z-index: 60;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── Responsive ── */
+@media (max-width: 52rem) {
+  .products { grid-template-columns: repeat(2, 1fr); }
+  .info-band { grid-template-columns: 1fr; }
+}
+@media (max-width: 34rem) {
+  .hero { padding: 3rem 0 2.5rem; }
+  .products { grid-template-columns: 1fr; }
+  .topbar nav a:not(:last-child) { display: none; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="topbar">
+    <a class="brand" href="#top">
+      <span class="mark">A</span>
+      <strong>ArtificialHub</strong>
+    </a>
+    <nav>
+      <a href="#portraits">Portraits</a>
+      <a href="#posters">Posters</a>
+      <a href="#cards">Cards</a>
+      <button class="cart-btn" id="cartBtn" aria-label="Open cart">
+        🛒 Cart <span class="count" id="cartCount">0</span>
+      </button>
+    </nav>
+  </header>
+
+  <section class="hero" id="top">
+    <span class="kicker">Original art · handmade</span>
+    <h1>Art, made by hand.</h1>
+    <p class="lead">A small gallery of original works — portraits, posters and greeting cards. Every piece is drawn, printed and signed by the artist.</p>
+    <div class="actions">
+      <a class="btn btn-primary" href="#portraits">Browse the gallery</a>
+      <a class="btn btn-ghost" href="#about">About the artist</a>
+    </div>
+  </section>
+
+  <!-- ═══ PORTRAITS ═══ -->
+  <section class="section" id="portraits">
+    <div class="section-head">
+      <h2 class="serif">Portraits</h2>
+      <span class="rule"></span>
+    </div>
+    <div class="products" data-category="Portraits">
+      <div class="card" data-id="p1" data-name="The Path" data-price="25" data-image="images/01-light-path.png" data-payhip="REPLACE_WITH_YOUR_PAYHIP_LINK">
+        <div class="img-wrap"><img src="images/01-light-path.png" alt="Portrait — The Path"></div>
+        <div class="body">
+          <h3>The Path</h3>
+          <p>Original portrait study — ink and gold leaf on cotton paper.</p>
+          <span class="price">€25</span>
+          <div class="actions-row">
+            <a class="buy" href="#" data-payhip-link>Buy</a>
+            <button class="add" data-add>Add to cart</button>
+          </div>
+        </div>
+      </div>
+      <div class="card" data-id="p2" data-name="The Word" data-price="18" data-image="images/02-open-book.png" data-payhip="REPLACE_WITH_YOUR_PAYHIP_LINK">
+        <div class="img-wrap"><img src="images/02-open-book.png" alt="Portrait — The Word"></div>
+        <div class="body">
+          <h3>The Word</h3>
+          <p>Limited edition print — signed and numbered by the artist.</p>
+          <span class="price">€18</span>
+          <div class="actions-row">
+            <a class="buy" href="#" data-payhip-link>Buy</a>
+            <button class="add" data-add>Add to cart</button>
+          </div>
+        </div>
+      </div>
+      <div class="card" data-id="p3" data-name="The Sieve" data-price="35" data-image="images/03-sieve.png" data-payhip="REPLACE_WITH_YOUR_PAYHIP_LINK">
+        <div class="img-wrap"><img src="images/03-sieve.png" alt="Portrait — The Sieve"></div>
+        <div class="body">
+          <h3>The Sieve</h3>
+          <p>Mixed media on canvas — comes with a certificate of authenticity.</p>
+          <span class="price">€35</span>
+          <div class="actions-row">
+            <a class="buy" href="#" data-payhip-link>Buy</a>
+            <button class="add" data-add>Add to cart</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ POSTERS ═══ -->
+  <section class="section" id="posters">
+    <div class="section-head">
+      <h2 class="serif">Posters</h2>
+      <span class="rule"></span>
+    </div>
+    <div class="products" data-category="Posters">
+      <div class="card" data-id="po1" data-name="The Horizon" data-price="22" data-image="images/04-horizon.png" data-payhip="REPLACE_WITH_YOUR_PAYHIP_LINK">
+        <div class="img-wrap"><img src="images/04-horizon.png" alt="Poster — The Horizon"></div>
+        <div class="body">
+          <h3>The Horizon</h3>
+          <p>A2 giclée poster — archival inks, ready to frame.</p>
+          <span class="price">€22</span>
+          <div class="actions-row">
+            <a class="buy" href="#" data-payhip-link>Buy</a>
+            <button class="add" data-add>Add to cart</button>
+          </div>
+        </div>
+      </div>
+      <div class="card" data-id="po2" data-name="The Offering" data-price="15" data-image="images/05-hands-light.png" data-payhip="REPLACE_WITH_YOUR_PAYHIP_LINK">
+        <div class="img-wrap"><img src="images/05-hands-light.png" alt="Poster — The Offering"></div>
+        <div class="body">
+          <h3>The Offering</h3>
+          <p>A3 giclée poster — signed on the back.</p>
+          <span class="price">€15</span>
+          <div class="actions-row">
+            <a class="buy" href="#" data-payhip-link>Buy</a>
+            <button class="add" data-add>Add to cart</button>
+          </div>
+        </div>
+      </div>
+      <div class="card" data-id="po3" data-name="The Window" data-price="28" data-image="images/06-window.png" data-payhip="REPLACE_WITH_YOUR_PAYHIP_LINK">
+        <div class="img-wrap"><img src="images/06-window.png" alt="Poster — The Window"></div>
+        <div class="body">
+          <h3>The Window</h3>
+          <p>B1 gallery poster — edition of 50, numbered.</p>
+          <span class="price">€28</span>
+          <div class="actions-row">
+            <a class="buy" href="#" data-payhip-link>Buy</a>
+            <button class="add" data-add>Add to cart</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CARDS ═══ -->
+  <section class="section" id="cards">
+    <div class="section-head">
+      <h2 class="serif">Cards</h2>
+      <span class="rule"></span>
+    </div>
+    <div class="products" data-category="Cards">
+      <div class="card" data-id="c1" data-name="Light — set of 5" data-price="12" data-image="images/02-open-book.png" data-payhip="REPLACE_WITH_YOUR_PAYHIP_LINK">
+        <div class="img-wrap"><img src="images/02-open-book.png" alt="Card set — Light"></div>
+        <div class="body">
+          <h3>Light — set of 5</h3>
+          <p>Greeting cards with envelopes — blank inside for your words.</p>
+          <span class="price">€12</span>
+          <div class="actions-row">
+            <a class="buy" href="#" data-payhip-link>Buy</a>
+            <button class="add" data-add>Add to cart</button>
+          </div>
+        </div>
+      </div>
+      <div class="card" data-id="c2" data-name="Horizon — set of 5" data-price="12" data-image="images/04-horizon.png" data-payhip="REPLACE_WITH_YOUR_PAYHIP_LINK">
+        <div class="img-wrap"><img src="images/04-horizon.png" alt="Card set — Horizon"></div>
+        <div class="body">
+          <h3>Horizon — set of 5</h3>
+          <p>Letterpress cards — printed on recycled cotton stock.</p>
+          <span class="price">€12</span>
+          <div class="actions-row">
+            <a class="buy" href="#" data-payhip-link>Buy</a>
+            <button class="add" data-add>Add to cart</button>
+          </div>
+        </div>
+      </div>
+      <div class="card" data-id="c3" data-name="Grace — set of 5" data-price="14" data-image="images/05-hands-light.png" data-payhip="REPLACE_WITH_YOUR_PAYHIP_LINK">
+        <div class="img-wrap"><img src="images/05-hands-light.png" alt="Card set — Grace"></div>
+        <div class="body">
+          <h3>Grace — set of 5</h3>
+          <p>Folded cards with gold-edged envelopes.</p>
+          <span class="price">€14</span>
+          <div class="actions-row">
+            <a class="buy" href="#" data-payhip-link>Buy</a>
+            <button class="add" data-add>Add to cart</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ INFO BAND ═══ -->
+  <section class="info-band" id="about">
+    <div class="item">
+      <span class="num">i.</span>
+      <h3>Original works</h3>
+      <p>Every piece is created by hand — no prints of prints.</p>
+    </div>
+    <div class="item">
+      <span class="num">ii.</span>
+      <h3>Signed &amp; shipped</h3>
+      <p>Each order is signed and carefully packed for travel.</p>
+    </div>
+    <div class="item">
+      <span class="num">iii.</span>
+      <h3>Worldwide delivery</h3>
+      <p>Shipped from Bulgaria with tracking — 5–12 days worldwide.</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>© 2026 ArtificialHub</span>
+    <span>Art, made by hand.</span>
+  </footer>
+
+</div>
+
+<!-- ═══ CART DRAWER ═══ -->
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer" aria-label="Shopping cart">
+  <div class="drawer-head">
+    <h2>Your cart</h2>
+    <button class="drawer-close" id="drawerClose" aria-label="Close cart">×</button>
+  </div>
+  <div class="drawer-body" id="drawerBody"></div>
+  <div class="drawer-foot" id="drawerFoot" style="display:none">
+    <div class="cart-total">
+      <span>Total</span>
+      <span class="amount" id="cartTotal">€0</span>
+    </div>
+    <button class="checkout-btn" id="checkoutBtn">Checkout</button>
+  </div>
+</aside>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ── CONFIG ──────────────────────────────────────────────────
+     Set your Payhip checkout link below. After the buyer fills in
+     the order form, they are sent to this link to complete payment.
+     Format: https://payhip.com/b/XXXXX                             */
+  var PAYHIP_CHECKOUT_LINK = ""; // ← your Payhip product URL
+
+  var STORAGE_KEY = "artificialhub_cart_v1";
+
+  /* ── State ── */
+  var cart = [];
+  try { cart = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch (e) { cart = []; }
+
+  var els = {
+    cartBtn: document.getElementById("cartBtn"),
+    cartCount: document.getElementById("cartCount"),
+    drawer: document.getElementById("drawer"),
+    overlay: document.getElementById("overlay"),
+    drawerClose: document.getElementById("drawerClose"),
+    drawerBody: document.getElementById("drawerBody"),
+    drawerFoot: document.getElementById("drawerFoot"),
+    cartTotal: document.getElementById("cartTotal"),
+    checkoutBtn: document.getElementById("checkoutBtn"),
+    toast: document.getElementById("toast")
+  };
+
+  function save() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(cart)); } catch (e) {}
+  }
+  function fmt(n) { return "€" + n.toFixed(2).replace(/\.00$/, ""); }
+  function total() { return cart.reduce(function (s, i) { return s + i.price * i.qty; }, 0); }
+  function count() { return cart.reduce(function (s, i) { return s + i.qty; }, 0); }
+
+  function toast(msg) {
+    els.toast.textContent = msg;
+    els.toast.classList.add("show");
+    clearTimeout(toast._t);
+    toast._t = setTimeout(function () { els.toast.classList.remove("show"); }, 2200);
+  }
+
+  /* ── Buy buttons (direct, per item) ── */
+  document.querySelectorAll("[data-payhip-link]").forEach(function (link) {
+    var card = link.closest(".card");
+    var url = card ? card.getAttribute("data-payhip") : "";
+    if (url && url.indexOf("REPLACE_WITH") === -1) {
+      link.setAttribute("href", url);
+    } else {
+      link.addEventListener("click", function (e) {
+        e.preventDefault();
+        toast("Add your Payhip link to this item first");
+      });
+    }
+  });
+
+  /* ── Add to cart ── */
+  document.querySelectorAll("[data-add]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var card = btn.closest(".card");
+      var id = card.getAttribute("data-id");
+      var existing = cart.find(function (i) { return i.id === id; });
+      if (existing) { existing.qty++; }
+      else {
+        cart.push({
+          id: id,
+          name: card.getAttribute("data-name"),
+          price: parseFloat(card.getAttribute("data-price")) || 0,
+          image: card.getAttribute("data-image"),
+          qty: 1
+        });
+      }
+      save(); render();
+      btn.textContent = "Added ✓";
+      btn.classList.add("added");
+      setTimeout(function () { btn.textContent = "Add to cart"; btn.classList.remove("added"); }, 1200);
+      toast("Added to cart");
+    });
+  });
+
+  /* ── Cart operations ── */
+  function changeQty(id, delta) {
+    var item = cart.find(function (i) { return i.id === id; });
+    if (!item) return;
+    item.qty += delta;
+    if (item.qty <= 0) cart = cart.filter(function (i) { return i.id !== id; });
+    save(); render();
+  }
+  function removeItem(id) {
+    cart = cart.filter(function (i) { return i.id !== id; });
+    save(); render();
+  }
+
+  /* ── Render cart ── */
+  function render() {
+    els.cartCount.textContent = count();
+    if (!cart.length) {
+      els.drawerBody.innerHTML = '<div class="cart-empty">Your cart is empty.<br>Browse the gallery and add something you love.</div>';
+      els.drawerFoot.style.display = "none";
+      return;
+    }
+    els.drawerFoot.style.display = "block";
+    var html = "";
+    cart.forEach(function (item) {
+      html +=
+        '<div class="cart-item">' +
+          '<img src="' + item.image + '" alt="">' +
+          '<div>' +
+            '<div class="name">' + item.name + '</div>' +
+            '<div class="unit">' + fmt(item.price) + ' each</div>' +
+            '<div class="qty">' +
+              '<button data-dec="' + item.id + '" aria-label="Decrease">−</button>' +
+              '<span>' + item.qty + '</span>' +
+              '<button data-inc="' + item.id + '" aria-label="Increase">+</button>' +
+            '</div>' +
+          '</div>' +
+          '<div class="right">' +
+            '<div class="line-total">' + fmt(item.price * item.qty) + '</div>' +
+            '<button class="remove" data-remove="' + item.id + '">Remove</button>' +
+          '</div>' +
+        '</div>';
+    });
+    els.drawerBody.innerHTML = html;
+    els.cartTotal.textContent = fmt(total());
+  }
+
+  els.drawerBody.addEventListener("click", function (e) {
+    var t = e.target;
+    if (t.dataset.inc) changeQty(t.dataset.inc, 1);
+    else if (t.dataset.dec) changeQty(t.dataset.dec, -1);
+    else if (t.dataset.remove) removeItem(t.dataset.remove);
+  });
+
+  /* ── Drawer open/close ── */
+  function openDrawer() { els.drawer.classList.add("open"); els.overlay.classList.add("open"); }
+  function closeDrawer() { els.drawer.classList.remove("open"); els.overlay.classList.remove("open"); }
+  els.cartBtn.addEventListener("click", openDrawer);
+  els.drawerClose.addEventListener("click", closeDrawer);
+  els.overlay.addEventListener("click", closeDrawer);
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeDrawer(); });
+
+  /* ── Checkout: buyer details form ── */
+  function checkoutForm() {
+    var summary = "";
+    cart.forEach(function (i) {
+      summary += '<div class="line"><span>' + i.name + ' × ' + i.qty + '</span><span>' + fmt(i.price * i.qty) + '</span></div>';
+    });
+    return '' +
+      '<div class="order-summary">' +
+        '<h3>Order summary</h3>' + summary +
+        '<div class="line total"><span>Total</span><span>' + fmt(total()) + '</span></div>' +
+      '</div>' +
+      '<form class="checkout-form" id="buyerForm" novalidate>' +
+        '<div class="field"><label>Full name <span class="req">*</span></label>' +
+          '<input name="name" required><div class="error">Please enter your name.</div></div>' +
+        '<div class="field"><label>Email <span class="req">*</span></label>' +
+          '<input name="email" type="email" required><div class="error">Please enter a valid email.</div></div>' +
+        '<div class="field"><label>Phone <span class="req">*</span></label>' +
+          '<input name="phone" type="tel" required><div class="error">Please enter your phone number.</div></div>' +
+        '<div class="field"><label>Delivery address <span class="req">*</span></label>' +
+          '<textarea name="address" required placeholder="Street, city, postal code, country"></textarea>' +
+          '<div class="error">Please enter your delivery address.</div></div>' +
+        '<div class="field"><label>Notes (optional)</label>' +
+          '<textarea name="notes" placeholder="Anything you want the artist to know — gift message, framing, etc."></textarea></div>' +
+        '<button class="checkout-btn" type="submit">Continue to payment</button>' +
+      '</form>';
+  }
+
+  function orderDone() {
+    return '' +
+      '<div class="order-done">' +
+        '<div class="ok">✓</div>' +
+        '<h3>Order ready</h3>' +
+        '<p>Your details are saved. Complete the payment to confirm your order — the artist will contact you to arrange delivery.</p>' +
+        '<div class="row">' +
+          (PAYHIP_CHECKOUT_LINK
+            ? '<a class="checkout-btn" style="display:block;text-align:center;line-height:2.6" href="' + PAYHIP_CHECKOUT_LINK + '" target="_blank" rel="noopener">Pay on Payhip</a>'
+            : '<button class="checkout-btn" id="copyOrder">Copy order details</button>') +
+          '<button class="btn-ghost btn" style="width:100%" id="backToShop">Back to gallery</button>' +
+        '</div>' +
+      '</div>';
+  }
+
+  els.checkoutBtn.addEventListener("click", function () {
+    if (!cart.length) return;
+    els.drawerBody.innerHTML = checkoutForm();
+    els.drawerFoot.style.display = "none";
+    els.drawerBody.scrollTop = 0;
+  });
+
+  els.drawerBody.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var form = e.target;
+    if (!form || form.id !== "buyerForm") return;
+    var valid = true;
+    ["name", "email", "phone", "address"].forEach(function (field) {
+      var input = form.querySelector('[name="' + field + '"]');
+      var wrap = input.closest(".field");
+      var ok = input.value.trim() !== "" && (field !== "email" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value.trim()));
+      wrap.classList.toggle("invalid", !ok);
+      if (!ok) valid = false;
+    });
+    if (!valid) return;
+
+    var orderText = "Order from ArtificialHub\n\n";
+    cart.forEach(function (i) {
+      orderText += i.name + " × " + i.qty + " — " + fmt(i.price * i.qty) + "\n";
+    });
+    orderText += "\nTotal: " + fmt(total()) + "\n\n";
+    orderText += "Name: " + form.name.value.trim() + "\n";
+    orderText += "Email: " + form.email.value.trim() + "\n";
+    orderText += "Phone: " + form.phone.value.trim() + "\n";
+    orderText += "Address: " + form.address.value.trim() + "\n";
+    if (form.notes.value.trim()) orderText += "Notes: " + form.notes.value.trim() + "\n";
+
+    cart = [];
+    save();
+    els.drawerBody.innerHTML = orderDone();
+    els.drawerBody.scrollTop = 0;
+    els.cartCount.textContent = "0";
+
+    var copyBtn = document.getElementById("copyOrder");
+    if (copyBtn) {
+      copyBtn.addEventListener("click", function () {
+        navigator.clipboard.writeText(orderText).then(function () {
+          toast("Order details copied — paste them in your message to the artist");
+        }, function () { toast("Copy failed — please note your details manually"); });
+      });
+    }
+    document.getElementById("backToShop").addEventListener("click", function () {
+      closeDrawer();
+      render();
+    });
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
